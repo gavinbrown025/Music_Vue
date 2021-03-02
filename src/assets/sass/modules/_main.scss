@@ -1,0 +1,40 @@
+.hidden {
+	display: none !important;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	max-width: 2000px;
+	min-width: 325px;
+}
+
+main {
+	width: 100%;
+}
+
+h1,
+h2,
+h3 {
+	@include headerFont();
+}
+
+p,
+a {
+	@include copyFont();
+}
+
+.cta-button {
+	display: flex;
+	flex-grow: 0;
+	border-radius: $rad;
+	@include blackGradient();
+	width: max-content;
+	a {
+		padding: 0.5rem 2rem;
+	}
+}
+
+.highlight {
+	color: $highlight;
+}
