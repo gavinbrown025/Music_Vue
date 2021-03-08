@@ -4,9 +4,8 @@ const app = express();
 
 app.use(express.static(__dirname + '/dist/'));
 
-//! so it can redirect all refreshes to index file where it can handle the routes
-app.get(/.*/, function(req, res){
-    res.sendFile(__dirname + '/dist/index.html');
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.listen(port, () => {
