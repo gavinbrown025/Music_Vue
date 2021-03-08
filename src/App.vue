@@ -24,7 +24,6 @@
       </section>
 
       <form @submit.prevent="search" class="search-con">
-        <!-- <h3>Queue</h3> -->
         <input v-model="query" type="text" class="searchbar" placeholder="i.e beatles" />
         <button type="submit">search</button>
       </form>
@@ -34,12 +33,14 @@
           v-for="song in songs"
           :key="song.id"
           @click="play(song)"
-          :class="(song.preview == current.preview) ? 'song playing' : 'song' "
+          :class="(song.id == current.id) ? 'song playing' : 'song' "
         >
           <p>{{song.artist.name}} - {{song.title}}</p>
           <span>{{getCurrentTime(song.duration)}}</span>
         </div>
       </section>
+
+      <!-- <playlist @play="junk(x)" :songs="songs" :current="current"></playlist> -->
     </main>
 
     <footer></footer>
@@ -69,6 +70,9 @@ export default {
   },
 
   methods: {
+    junk(x) {
+      console.log(x);
+    },
     search(e) {
       fetchData(
         `https://deezerdevs-deezer.p.rapidapi.com/search?q=${this.query}`,
@@ -153,7 +157,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./assets/sass/style.scss";
+@import "@/assets/sass/style.scss";
 
 .player {
   padding: 3rem;
@@ -253,7 +257,6 @@ export default {
     }
   }
 }
-
 .playlist {
   padding: 2rem;
   display: flex;
@@ -285,6 +288,7 @@ export default {
     }
   }
 }
+
 footer {
   height: 4rem;
   background: $grey;
