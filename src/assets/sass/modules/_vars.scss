@@ -2,12 +2,14 @@ $highlight: rgb(31, 153, 143);
 $dk-blue: #1f2e41;
 $grey: #262629;
 $black: #141416;
-$white: #e0e0e9;
+$white: #e8e8f3;
 
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
 $header-font: "montserrat", Helvetica, Arial, sans-serif;
-$header-size: 3rem;
+$header-size: 2.5rem;
 
-$copy-font: "cabin", Helvetica, Arial, sans-serif;
+@import url("https://fonts.googleapis.com/css2?family=Cabin&display=swap");
+$copy-font: "montserrat", Helvetica, Arial, sans-serif;
 $copy-size: 1.2rem;
 
 $rad: 0.5rem;
