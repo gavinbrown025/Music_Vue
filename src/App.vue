@@ -2,6 +2,7 @@
   <div id="app">
     <main>
       <section class="player">
+        <img class="logo" src="./assets/AltoLogo.svg" alt="Alto Logo" />
         <h2 v-if="songs.length" class="song-title">{{current.artist.name}} - {{current.title}}</h2>
         <h2 class="song-title" v-else>Search for Songs below</h2>
 
@@ -19,7 +20,8 @@
         <div class="song-time">
           <span class="time">{{ getCurrentTime(currentTime) }}</span>
           <input type="range" value="0" class="time-bar" ref="timePos" />
-          <span class="time">{{ getCurrentTime(current.duration) }}</span>
+          <span v-if="current.duration" class="time">{{ getCurrentTime(current.duration) }}</span>
+          <span v-else class="time">00:00</span>
         </div>
       </section>
 
@@ -70,9 +72,6 @@ export default {
   },
 
   methods: {
-    junk(x) {
-      console.log(x);
-    },
     search(e) {
       fetchData(
         `https://deezerdevs-deezer.p.rapidapi.com/search?q=${this.query}`,
@@ -87,6 +86,10 @@ export default {
       )
         .then((data) => {
           this.songs = data;
+          this.songs.forEach((song, index) => {
+            song["index"] = index;
+          });
+
           this.current = this.songs[this.index];
           this.player.src = this.current.preview;
         })
@@ -94,20 +97,25 @@ export default {
           console.error(err);
         });
     },
+
     play(song) {
       if (typeof song.preview != "undefined") {
         this.current = song;
+        this.index = song.index;
         this.player.src = this.current.preview;
       }
+
       this.player.play();
       this.player.addEventListener("ended", this.next);
 
       this.isPlaying = true;
     },
+
     pause() {
       this.player.pause();
       this.isPlaying = false;
     },
+
     next() {
       this.index++;
       if (this.index >= this.songs.length - 1) {
@@ -116,6 +124,7 @@ export default {
       this.current = this.songs[this.index];
       this.play(this.current);
     },
+
     prev() {
       this.index--;
       if (this.index < 0) {
@@ -124,9 +133,11 @@ export default {
       this.current = this.songs[this.index];
       this.play(this.current);
     },
+
     removeSong(e) {
       this.songs = this.songs.filter((song) => song.id !== e.id);
     },
+
     getCurrentTime(time) {
       let minute = Math.floor(time / 60);
       let second = Math.floor(time - minute * 60);
@@ -135,16 +146,19 @@ export default {
       let formatTime = `${minute}:${second}`;
       return formatTime;
     },
+
     timeTrack() {
       this.$refs.timePos.value =
         (this.player.currentTime / this.current.duration) * 100;
 
       this.currentTime = this.player.currentTime;
     },
+
     updatePlayTime(e) {
       let scrubTime = (e.target.value * this.current.duration) / 100;
       this.player.currentTime = scrubTime;
     },
+
     addEventListener() {
       this.player.addEventListener("timeupdate", this.timeTrack);
       this.$refs.timePos.addEventListener("input", this.updatePlayTime);
@@ -160,29 +174,37 @@ export default {
 @import "@/assets/sass/style.scss";
 
 .player {
-  padding: 3rem;
+  position: relative;
+  padding: 2rem 3rem;
   display: grid;
-  grid-template-rows: auto 1fr repeat(2, auto);
+  grid-template-rows: auto auto 1fr auto auto;
   place-items: center;
   min-height: 100vh;
   background: url("./assets/background.jpg") bottom left / cover;
 
+  .logo {
+    justify-self: flex-start;
+    height: 3.1rem;
+    margin-bottom: 1rem;
+  }
+
   .song-title {
+    margin: 1rem;
     text-align: center;
     color: white;
     text-shadow: 0 0 5rem rgba(0, 0, 0, 0.8);
   }
   .song-img img {
     box-shadow: $shadow;
-    max-width: 50vw;
-    max-height: 40vh;
+    max-width: 60vw;
+    max-height: 50vh;
   }
 
   .controls {
     width: 33%;
     min-width: 300px;
-    padding-bottom: 1rem;
-    height: 5rem;
+    margin-top: 1rem;
+    height: 4rem;
     display: flex;
     justify-content: space-evenly;
     img {
@@ -295,16 +317,24 @@ footer {
 }
 
 @media screen and(max-width: 700px) {
-  .player .song-time {
-    width: 100%;
+  .player {
+    .logo {
+      justify-self: center;
+    }
+    .song-time {
+      width: 100%;
+    }
+    .song-title {
+      font-size: 2rem;
+    }
+    .song-img img {
+      max-width: 85vw;
+    }
   }
 }
-@media screen and(max-width: 400px) {
+@media screen and(max-width: 500px) {
   .player {
-    padding: 3rem 1rem;
-    .song-img img {
-      max-width: 66vw;
-    }
+    padding: 1.5rem 1rem;
   }
 }
 
